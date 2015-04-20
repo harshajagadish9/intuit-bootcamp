@@ -20,6 +20,8 @@ module.exports = function(config) {
 	app.use("/api", bodyParser.json());
 	app.use("/api", require("./routers/transactions.js")(config));
 	app.use("/api", require("./routers/contact.js")(config));
+	app.use("/api", require("./routers/donation-list.js")(config));
+	app.use("/api", require("./routers/gallery.js")(config));
 
 	/*
 	app.use(multer({

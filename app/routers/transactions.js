@@ -77,6 +77,5 @@ module.exports = function(config) {
 				});
 		});
 
-
 	return transactionsRouter;
 };

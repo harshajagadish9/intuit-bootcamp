@@ -4,7 +4,14 @@ module.exports = function(config) {
 		express = require("express"),
 		bodyParser = require("body-parser"),
 		multer = require("multer"),
+		mongoose = require("mongoose"),
 		app = express();
+
+	mongoose.connect("mongodb://" +
+		config.mongoServer.host + ":" +
+		config.mongoServer.port + "/" +
+		config.mongoServer.dbName);
+
 
 	console.log(config.httpServer.wwwRoot);
 
@@ -12,6 +19,7 @@ module.exports = function(config) {
 
 	app.use("/api", bodyParser.json());
 	app.use("/api", require("./routers/transactions.js")(config));
+	app.use("/api", require("./routers/contact.js")(config));
 
 	/*
 	app.use(multer({

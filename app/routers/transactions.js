@@ -5,10 +5,6 @@ module.exports = function(config) {
 		mongoose = require("mongoose"),
 		transactionsRouter = express.Router();
 
-	mongoose.connect("mongodb://" +
-		config.mongoServer.host + ":" +
-		config.mongoServer.port + "/" +
-		config.mongoServer.dbName);
 
 	var transactionSchema = mongoose.Schema({
 		accountNumber: String,
@@ -83,6 +79,4 @@ module.exports = function(config) {
 
 
 	return transactionsRouter;
-
-
 };

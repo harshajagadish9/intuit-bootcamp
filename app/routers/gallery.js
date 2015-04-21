@@ -1,26 +1,51 @@
-module.exports = function(config) {
-
+module.exports = function(config){
 	var
-		express = require("express"),
-		mongoose = require("mongoose"),
-		GalleryRouter = express.Router();
+	express = require("express"),
+	galleryRouter = express.Router(),
+	mongoose = require("mongoose"),
+	fs = require("fs");
+
+
+	var storeFile = function(){
+
+	}
 
 
 	var gallerySchema = mongoose.Schema({
-		title: String,
-		dateAdded: Date,
-		category: String,
-		author: String,
-		route: String,
-		content: Number		
+		filename: String,
+		type: String,
+		data: Buffer
+
 	});
 
 	var GalleryModel = mongoose.model("gallery", gallerySchema);
 
-	GalleryRouter.route("/gallery-list")
-		.get(function(req, res) {
-			GalleryModel.find({}, function(err, gallery) {
-				if (err) {
+	galleryRouter.route("/gallerys")
+	.get(function(req, res){
+		GalleryModel.find({}, function(err, gallerys){
+
+			if(err){
+				console.log(err);
+				res.status(500).json(err);
+				return;
+			}
+
+			res.json(gallerys);
+		});
+	});
+	galleryRouter.route("/gallery")
+	.post(function(req, res){
+
+		fs.readFile(req.files["file_0"].path, function(err, data){
+			var fileMeta = {};
+			fileMeta.filename = req.files["file_0"].originalname;
+			fileMeta.type = req.files["file_0"].extension;
+			fileMeta.data = data;
+
+			var t = new GalleryModel(fileMeta);
+			t.save(function(err, gallery){
+
+				if(err){
 					console.log(err);
 					res.status(500).json(err);
 					return;
@@ -29,55 +54,50 @@ module.exports = function(config) {
 			});
 		});
 
-	GalleryRouter.route("/gallery")
-		.post(function(req, res) {
-			var t = new GalleryModel(req.body.gallery);
-			t.save(function(err, gallery) {
-				if (err) {
+	});
+	galleryRouter.route("/gallery/:galleryId")
+	.get(function(req, res){
+		GalleryModel.findById(req.params.galleryId, function(err, gallery){
+
+			if(err){
+				console.log(err);
+				res.status(500).json(err);
+				return;
+			}
+			console.log(gallery);
+			res.writeHead(200, {'Content-Type': 'image/gif' });
+			res.end(gallery.data, 'binary');
+
+      //res.json(gallery);
+  });
+	})
+	.put(function(req, res){
+		GalleryModel.findByIdAndUpdate(req.params.galleryId,
+			req.body.gallery,
+			function(err, gallery){
+
+				if(err){
 					console.log(err);
 					res.status(500).json(err);
 					return;
 				}
+
 				res.json(gallery);
 			});
-		});
+	})
+	.delete(function(req, res){
+		GalleryModel.findByIdAndRemove(req.params.galleryId,
+			function(err, gallery){
 
-	GalleryRouter.route("/gallery/:galleryId")
-		.get(function(req, res) {
-			GalleryModel.findById(req.params.galleryId,
-				function(err, gallery) {
-					if (err) {
-						console.log(err);
-						res.status(500).json(err);
-						return;
-					}
-					res.json(gallery);
-				});
-		})
-		.put(function(req, res) {
-			GalleryModel.findByIdAndUpdate(req.params.galleryId,
-				req.body.gallery,
-				function(err, gallery) {
-					if (err) {
-						console.log(err);
-						res.status(500).json(err);
-						return;
-					}
-					res.json(gallery);
-				});
-		})
-		.delete(function(req, res) {
-			GalleryModel.findByIdAndRemove(req.params.galleryId,
-				function(err, gallery) {
-					if (err) {
-						console.log(err);
-						res.status(500).json(err);
-						return;
-					}
-					res.json(gallery);
-				});
-		});
+				if(err){
+					console.log(err);
+					res.status(500).json(err);
+					return;
+				}
 
+				res.json(gallery);
+			});
+	});
 
-	return GalleryRouter;
+	return galleryRouter;
 };

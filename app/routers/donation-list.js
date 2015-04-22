@@ -11,7 +11,7 @@ module.exports = function(config) {
 		typeOfPayment: String,
 		nameOnCard: String,
 		cardNumber: Number,
-		expirationDate: Date,
+		expirationDate: String,
 		cvv: Number,
 		address: String
 	});
@@ -32,7 +32,7 @@ module.exports = function(config) {
 
 	DonationRouter.route("/donation")
 		.post(function(req, res) {
-			var t = new DonationModel(req.body.donation);
+			var t = new DonationModel(req.body);
 			t.save(function(err, donation) {
 				if (err) {
 					console.log(err);

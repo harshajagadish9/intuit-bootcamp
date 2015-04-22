@@ -1,9 +1,8 @@
 body{
-	background-color: #66CCCC;
-	width:40%;
-	margin: 0 auto;
+	background-color: #66CCCC;	
 }
 
 #login-form.container{
 	width:400px;
+	margin: 0 auto;
 }

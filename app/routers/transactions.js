@@ -30,7 +30,7 @@ module.exports = function(config) {
 
 	transactionsRouter.route("/transaction")
 		.post(function(req, res) {
-			var t = new TransactionModel(req.body.transaction);
+			var t = new TransactionModel(req.body);
 			t.save(function(err, transaction) {
 				if (err) {
 					console.log(err);
@@ -62,7 +62,7 @@ module.exports = function(config) {
 						res.status(500).json(err);
 						return;
 					}
-					res.json(transaction);
+					res.json(req.body);
 				});
 		})
 		.delete(function(req, res) {

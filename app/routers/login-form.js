@@ -6,6 +6,7 @@ module.exports = function(config) {
 	session = require('express-session'),
 	passport = require("passport"),
 	crypto = require("crypto"),
+	csrf = require("csrf")(),
 	app = express(),
 	LoginRouter = express.Router();
 
@@ -76,8 +77,13 @@ module.exports = function(config) {
 					return;
 				}
 
-				res.json(login);
-			});			
+				csrf.secret().then(function(secret) {
+					req.session.csrfSecret = secret;
+					res.set("X-CSRF-Token", csrf.create(req.session.csrfSecret));
+					res.json(login);
+				});
+
+			});
 		});
 
 	});

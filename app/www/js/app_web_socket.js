@@ -1,8 +1,25 @@
-var ws = new WebSocket("ws://localhost:8080");
+function webClient(url){
+
+	var ws = new WebSocket(url);
+
+	var p = new Promise(function(resolve, reject){
+		ws.addEventListener("open", function() {
+			resolve(msg);
+		}	
+	});
+	p.then({
+		
+	})
+
+}
+
+
 
 ws.addEventListener("open", function() {
 	ws.send(JSON.stringify({
-		message: "Hi!"
+		messageType: "error",
+		errorMessage: "error message"
+
 	}));
 });
 

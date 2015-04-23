@@ -3,76 +3,197 @@
 
 <head>
 	<title>Intuit BootCamp Table Demo</title>
-	<link href="libs/bootstrap/dist/css/bootstrap.css" rel="stylesheet">
-	<link href="libs/bootstrap/dist/css/bootstrap-theme.css" rel="stylesheet">
-	<link href="css/table.css" rel="stylesheet">
+	<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
+	<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
+	<link href='css/site.css' rel="stylesheet">
+	<script id="donation-record" type="template/handlebars">å
+		<div>
+			<div>
+				<label>Amount:</label>
+				{{amount}}
+			</div>
+			<div>
+				<label>typeOfPayment:</label>
+				{{typeOfPayment}}
+			</div>
+			<div>
+				<label>nameOnCard:</label>
+				{{nameOnCard}}
+			</div>
+			<div>
+				<label>cardNumber:</label>
+				{{cardNumber}}
+			</div>
+			<div>
+				<label>expirationDate:</label>
+				{{expirationDate}}
+			</div>
+			<div>
+				<label>cvv:</label>
+				{{cvv}}
+			</div>				
+			<div>
+				<label>address:</label>
+				{{address}}
+			</div>
+
+		</div>
+	</script>
+
+	<script id="donation-records" type="template/handlebars">
+			<table class="table table-bordered">
+				<tr>
+					<td>Amount</td>
+					<td>type of Payment</td>
+					<td>Card Number</td>
+					<td>Card Holder Name</td>
+					<td>expirationDate</td>
+					<td>cvv</td>
+					<td>address</td>
+				</tr>
+				{{#each donations}}
+					<tr>
+						<td>{{amount}}</td>
+						<td>{{typeOfPayment}}</td>
+						<td>{{nameOnCard}}</td>
+						<td>{{cardNumber}}</td>
+						<td>{{expirationDate}}</td>
+						<td>{{cvv}}</td>
+						<td>{{address}}</td>
+					</tr>
+				{{/each}}
+			</table>
+		</script>
+
+
+
 </head>
 
 <body>
 	<h1>BootCamp Donations Table</h1>
+
+	<button id="log-me-in">Log Me In</button>
+	<br><br>
+	<button id="get-all-donations">Get All Donations</button>
+	<br><br>
+	<button id="create-donation">Create Donation</button>
+	<br><br>
+	<button id="add-donation">Add Donation</button>
+	<br><br>
+	<div id="view"></div>
 	
-	<div class="container">
 
-		<table class="table table-bordered">
-			<thead>
-				<tr>
-					<th>Donor Name</th>
-					<th>Donation Amount</th>
-					<th>Date Donted</th>
-					<th>Last 4 Digits of CC</th>
-					<th>Actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr>
-					<td>John Doe</td>
-					<td>$25.00</td>
-					<td>04-11-2015</td>
-					<td>1122</td>					
-					<td>		
-            <div class="btn-group">
-					 <button type="button" class="btn btn-default dropdown-toggle" 
-						data-toggle="dropdown">
-						Actions <span class="caret"></span>
-					 </button>
-					 <ul class="dropdown-menu" role="menu">
-						<li><a href="#">Request Refund</a></li>
-						<li><a href="#">View More Details</a></li>
-  					</ul>
-				  </div>	
-			   </td>
-		</tr>
-		<tr>
-			<td>Mary Elizabeth</td>
-			<td>$15.00</td>
-			<td>03-14-2015</td>
-			<td>3344</td>
-			<td>		<div class="btn-group">
-				<button type="button" class="btn btn-default dropdown-toggle" 
-				data-toggle="dropdown">
-				Actions <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu" role="menu">
-						<li><a href="#">Request Refund</a></li>
-						<li><a href="#">View More Details</a></li>
-			</ul>
-		</div>	
-	</td>
-</tr>
-<tr>
-	<td>Kristen Tom</td>
-	<td>$100.00</td>
-	<td>01-02-2015</td>
-	<td>5599</td>
-	<td><button type="submit" class="btn btn-default">Request Refund</button><button type="submit" class="btn btn-default">View More Details</button></td>
-</tr>
-</tbody>
-</table>	
-</div>
+	<script src="libs/jquery/dist/jquery.js"></script>
+	<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="libs/underscore/underscore.js"></script>
+	<script src="libs/backbone/backbone.js"></script>
+	<script src="libs/handlebars/handlebars.js"></script>
 
-<script src="libs/jquery/dist/jquery.js"></script>
-<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
-<script src="js/app.js"></script>
+
+	<script>
+		function customSync(method, model, options) {
+			if (!options) {
+				options = {};
+			}
+			options.beforeSend = function(xhr) {
+				xhr.setRequestHeader("X-CSRF-Token", window.csrfToken || document.cookies);
+			};
+			Backbone.sync.call(this, method, model, options)
+			.then(function(data, status, xhr) {
+				window.csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+			});
+		}
+		var BaseModel = Backbone.Model.extend({
+			sync: customSync,
+			idAttribute: "_id"
+		});
+		var BaseCollection = Backbone.Collection.extend({
+			sync: customSync
+		});
+		var Donation = BaseModel.extend({
+			urlRoot: "/api/donation",
+			defaults: {
+				amount: null,
+				typeOfPayment: null,
+				nameOnCard : null,
+				cardNumber : 4111111111111111,
+				expirationDate : null,
+				cvv :123,
+				address :null
+			}
+		});
+		var Donations = BaseCollection.extend({
+			model: Donation,
+			url: "/api/donations"
+		});
+		var donations = new Donations();
+
+
+		window.addEventListener("DOMContentLoaded", function() {
+			document.getElementById("log-me-in")
+			.addEventListener("click", function() {
+				var xhr = new XMLHttpRequest();
+				xhr.onreadystatechange = function() {
+					if (xhr.readyState === 4) {
+						window.csrfToken = xhr.getResponseHeader("X-CSRF-Token");
+					}
+				}
+				xhr.open("POST", "/api/account/authenticate");
+				xhr.setRequestHeader("Content-Type", "application/json");
+				xhr.send(JSON.stringify({
+					"username": "harsha",
+					"password": "password"
+				}))
+			});
+			document.getElementById("get-all-donations")
+			.addEventListener("click", function() {
+				console.log(donations.models);
+				donations.fetch({
+					success: function() {
+						var source = document.getElementById("donation-records").innerHTML;
+						var template = Handlebars.compile(source);
+						var html = template({
+							donations:  donations.toJSON()
+						});
+						document.getElementById("view").innerHTML = html;
+					}
+				})
+			});
+			document.getElementById("create-donation")
+			.addEventListener("click", function() {
+				donations.create({
+					"amount": 100,
+					"typeOfPayment": "Debit",
+					"nameOnCard": "Harsha J",
+					"cardNumber" : 4111111111111111,
+					"expirationDate" : "01012014",
+					"cvv" :123,
+					"address": "123 main st"
+				});
+			});
+			document.getElementById("add-donation")
+			.addEventListener("click", function() {
+				var d = new Donation({});
+				d.set("amount", 345);
+				d.set("typeOfPayment", "Credit");
+				d.set("nameOnCard", "Ron Jones");
+				d.set("cardNumber", 99999911111111111);					
+				d.set("expirationDate", "03102015");
+				d.set("cvv", 230);
+				d.set("address", "123 Smith St");
+				d.save(null, {
+					success: function() {
+						console.dir(d.attributes);
+					}
+				});
+				donations.add(d);
+				var source = document.getElementById("donation-record").innerHTML;
+				var template = Handlebars.compile(source);
+				var html = template(d.attributes);
+				document.getElementById("view").innerHTML = html;
+			});
+		});
+</script>
 </body>
 
 </html>

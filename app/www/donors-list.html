@@ -6,67 +6,6 @@
 	<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
 	<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
 	<link href='css/site.css' rel="stylesheet">
-	<script id="donation-record" type="template/handlebars">å
-		<div>
-			<div>
-				<label>Amount:</label>
-				{{amount}}
-			</div>
-			<div>
-				<label>typeOfPayment:</label>
-				{{typeOfPayment}}
-			</div>
-			<div>
-				<label>nameOnCard:</label>
-				{{nameOnCard}}
-			</div>
-			<div>
-				<label>cardNumber:</label>
-				{{cardNumber}}
-			</div>
-			<div>
-				<label>expirationDate:</label>
-				{{expirationDate}}
-			</div>
-			<div>
-				<label>cvv:</label>
-				{{cvv}}
-			</div>				
-			<div>
-				<label>address:</label>
-				{{address}}
-			</div>
-
-		</div>
-	</script>
-
-	<script id="donation-records" type="template/handlebars">
-			<table class="table table-bordered">
-				<tr>
-					<td>Amount</td>
-					<td>type of Payment</td>
-					<td>Card Number</td>
-					<td>Card Holder Name</td>
-					<td>expirationDate</td>
-					<td>cvv</td>
-					<td>address</td>
-				</tr>
-				{{#each donations}}
-					<tr>
-						<td>{{amount}}</td>
-						<td>{{typeOfPayment}}</td>
-						<td>{{nameOnCard}}</td>
-						<td>{{cardNumber}}</td>
-						<td>{{expirationDate}}</td>
-						<td>{{cvv}}</td>
-						<td>{{address}}</td>
-					</tr>
-				{{/each}}
-			</table>
-		</script>
-
-
-
 </head>
 
 <body>
@@ -88,6 +27,7 @@
 	<script src="libs/underscore/underscore.js"></script>
 	<script src="libs/backbone/backbone.js"></script>
 	<script src="libs/handlebars/handlebars.js"></script>
+	<script src="js/templates.js"></script>
 
 
 	<script>
@@ -150,8 +90,9 @@
 				console.log(donations.models);
 				donations.fetch({
 					success: function() {
-						var source = document.getElementById("donation-records").innerHTML;
-						var template = Handlebars.compile(source);
+						//var source = document.getElementById("donation-records").innerHTML;
+						//var template = Handlebars.compile(source);
+						var template = window.templates.donations;
 						var html = template({
 							donations:  donations.toJSON()
 						});
@@ -187,8 +128,9 @@
 					}
 				});
 				donations.add(d);
-				var source = document.getElementById("donation-record").innerHTML;
-				var template = Handlebars.compile(source);
+				//var source = document.getElementById("donation-record").innerHTML;
+				//var template = Handlebars.compile(source);
+				var template = window.templates.donation;
 				var html = template(d.attributes);
 				document.getElementById("view").innerHTML = html;
 			});

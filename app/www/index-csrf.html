@@ -7,50 +7,7 @@
 		<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
 		<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
 		<link href='css/site.css' rel="stylesheet">
-				<script id="transaction-record" type="template/handlebars">
-			<div>
-				<div>
-					<label>Account Number:</label>
-					{{accountNumber}}
-				</div>
-				<div>
-					<label>Payee:</label>
-					{{payee}}
-				</div>
-				<div>
-					<label>Description:</label>
-					{{description}}
-				</div>
-				<div>
-					<label>Tax Item:</label>
-					{{taxItem}}
-				</div>
-				<div>
-					<label>Amount:</label>
-					{{amount}}
-				</div>
-			</div>
-		</script>
-		<script id="transaction-records" type="template/handlebars">
-			<table class="table table-bordered">
-				<tr>
-					<td>Account #</td>
-					<td>Payee</td>
-					<td>Description</td>
-					<td>Tax Item</td>
-					<td>Amount</td>
-				</tr>
-				{{#each transactions}}
-					<tr>
-						<td>{{accountNumber}}</td>
-						<td>{{payee}}</td>
-						<td>{{description}}</td>
-						<td>{{taxItem}}</td>
-						<td>{{amount}}</td>
-					</tr>
-				{{/each}}
-			</table>
-		</script>
+
 
 	</head>
 
@@ -70,6 +27,7 @@
 		<script src="libs/underscore/underscore.js"></script>
 		<script src="libs/backbone/backbone.js"></script>
 		<script src="libs/handlebars/handlebars.js"></script>
+		<script src="js/templates.js"></script>
 
 		<script>
 			function customSync(method, model, options) {
@@ -127,8 +85,9 @@
 						console.log(transactions.models);
 						transactions.fetch({
 							success: function() {
-								var source = document.getElementById("transaction-records").innerHTML;
-								var template = Handlebars.compile(source);
+								//var source = document.getElementById("transaction-records").innerHTML;
+								//var template = Handlebars.compile(source);
+								var template = window.templates.transactions;
 								var html = template({
 									transactions:  transactions.toJSON()
 								});
@@ -160,8 +119,9 @@
 							}
 						});
 						transactions.add(t);
-						var source = document.getElementById("transaction-record").innerHTML;
-						var template = Handlebars.compile(source);
+						//var source = document.getElementById("transaction-record").innerHTML;
+						//var template = Handlebars.compile(source);
+						var template = window.templates.transaction;
 						var html = template(t.attributes);
 						document.getElementById("view").innerHTML = html;
 				});

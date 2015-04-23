@@ -1,0 +1,22 @@
+			<table class="table table-bordered">
+				<tr>
+					<td>Amount</td>
+					<td>type of Payment</td>
+					<td>Card Number</td>
+					<td>Card Holder Name</td>
+					<td>expirationDate</td>
+					<td>cvv</td>
+					<td>address</td>
+				</tr>
+				{{#each donations}}
+					<tr>
+						<td>{{amount}}</td>
+						<td>{{typeOfPayment}}</td>
+						<td>{{nameOnCard}}</td>
+						<td>{{cardNumber}}</td>
+						<td>{{expirationDate}}</td>
+						<td>{{cvv}}</td>
+						<td>{{address}}</td>
+					</tr>
+				{{/each}}
+			</table>

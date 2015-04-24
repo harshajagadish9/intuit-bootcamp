@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+
+<html dir="ltr">
+
+<head>
+	<title>Intuit Boot Camp Backbone Views Demonstrations</title>
+	<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
+	<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
+	<link href='css/site.css' rel="stylesheet">
+</head>
+
+<body>		
+	<h1>Backbone views demo</h1>
+	<script src="libs/jquery/dist/jquery.js"></script>
+	<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="libs/underscore/underscore.js"></script>
+	<script src="libs/backbone/backbone.js"></script>
+	<script src="libs/handlebars/handlebars.js"></script>
+	<script src="js/templates.js"></script>
+
+	<article id="view-content1">
+		<button id="home-button">Back to Home</button>
+		<button id="menu-button">Get #Transactions</button>
+		<button id="greens-button">Get #Donors</button>		
+	</article>
+	<article id="view-content">
+	</article>
+
+
+
+	<script type="text/javascript">
+
+		var BaseModel = Backbone.Model.extend({
+				//sync: customSync,
+				idAttribute: "_id"
+			});
+
+		var BaseCollection = Backbone.Collection.extend({
+				//sync: customSync
+			});
+		
+		var Transaction = BaseModel.extend({
+			urlRoot: "/api/transaction",
+			defaults: {
+				accountNumber: null,
+				payee: null,
+				taxItem: "No Tax Item 2",
+				amount: null,
+				description: null
+			}
+		});
+
+		var Transactions = BaseCollection.extend({
+			model: Transaction,
+			url: "/api/transactions"
+		});
+		
+		var ts = new Transactions();
+
+		var TransactionsView = Backbone.View.extend({
+			events: {
+				"click tbody": "rowTransaction"
+			},
+			template: templates["transactions"],
+			render: function() {
+				this.$el.html(this.template({
+					transactions: this.collection
+				}));
+			},
+			initialize: function(options) {
+				this.options = options;
+			},
+			rowTransaction: function(e) {
+				if (e.target instanceof HTMLButtonElement) {
+					console.dir($(e.target).attr("data-model-id"));
+					console.log("handle transaction fired!");
+					console.dir($(e.target).closest("tr"));
+				}
+			}
+		});
+
+		var Donation = BaseModel.extend({
+			urlRoot: "/api/donation",
+			defaults: {
+				amount: null,
+				typeOfPayment: null,
+				nameOnCard : null,
+				cardNumber : 4111111111111111,
+				expirationDate : null,
+				cvv :12,
+				address :null
+			}
+		});
+
+		var Donations = BaseCollection.extend({
+			model: Donation,
+			url: "/api/donations"
+		});
+		var donations = new Donations();
+
+
+		var DonationsView = Backbone.View.extend({
+			events: {
+				//"click tbody": "rowTransaction"
+			},
+			template: templates["donations"],
+			render: function() {				
+				this.$el.html(this.template({
+					donations: this.collection
+				}));
+			},
+			initialize: function(options) {
+				this.options = options;
+			},
+			rowTransaction: function(e) {
+				if (e.target instanceof HTMLButtonElement) {
+					console.dir($(e.target).attr("data-model-id"));
+					console.log("handle transaction fired!");
+					console.dir($(e.target).closest("tr"));
+				}
+			}
+		});
+
+
+		var AppRouter = Backbone.Router.extend({
+			routes: {
+				"": "homeCookin",
+				"transactions": "listTransactions",
+				"donations": "listDonations"
+			},
+			homeCookin: function() {
+				console.log("in homeCookin");
+				if (this.currentView) {
+					this.currentView.remove();
+				}
+				this.currentView = new Backbone.View();
+				this.currentView.$el.html("<h1>Welcome Home</h1>");
+				$("#view-content").html(this.currentView.$el);
+			},
+			listTransactions: function() {
+				console.log("in listTransactions");
+				if (this.currentView) {
+					this.currentView.remove();
+				}				
+				console.dir(ts);
+				//this.currentView = new Backbone.View();				
+				ts.fetch({ success: function() {
+					var tsView = new TransactionsView({						
+						el: $("#view-content"),
+						collection: ts.toJSON()
+					});
+					console.dir(tsView);
+					tsView.render();
+				}});
+			},
+			listDonations: function(item) {
+				console.log("in listDonations");
+				if (this.currentView) {
+					this.currentView.remove();
+				}
+				//this.currentView = new Backbone.View();
+				console.dir(donations);
+				donations.fetch({ success: function() {
+					var dsView = new DonationsView({						
+						el: $("#view-content"),
+						collection: donations.toJSON()
+					});
+					dsView.render();
+				}});			
+
+			}
+		});
+var appRouter = new AppRouter();
+Backbone.history.start({ pushState: true });
+$("#home-button").on("click", function() {
+	appRouter.navigate("/", { trigger: true });
+});
+$("#menu-button").on("click", function() {
+	appRouter.navigate("/transactions", { trigger: true });
+});
+$("#greens-button").on("click", function() {
+	appRouter.navigate("/donations", { trigger: true });
+});
+
+
+</script>
+
+
+</body>
+
+</html>

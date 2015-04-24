@@ -95,7 +95,7 @@ this["templates"]["transactions"] = Handlebars.template({"1":function(depth0,hel
 },"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var stack1;
 
-  return "<table class=\"table table-bordered\"><tr><td>Account #######</td><td>Payee</td><td>Description</td><td>Tax Item</td><td>Amount</td></tr>"
+  return "<button type=\"button\" id=\"refresh-transactions\">Refresh</button><table class=\"table table-bordered\"><tr><td>Account #######</td><td>Payee</td><td>Description</td><td>Tax Item</td><td>Amount</td></tr>"
     + ((stack1 = helpers.each.call(depth0,(depth0 != null ? depth0.transactions : depth0),{"name":"each","hash":{},"fn":this.program(1, data, 0),"inverse":this.noop,"data":data})) != null ? stack1 : "")
     + "</table>";
 },"useData":true});

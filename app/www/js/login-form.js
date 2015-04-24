@@ -1,7 +1,3 @@
-function displayDate() {
-    document.getElementById("demo").innerHTML = Date();
-}
-
 document.getElementById("loginSubmit").addEventListener("click", function(){
 	var xhr = new XMLHttpRequest();	
 	var uname = document.getElementById("email").value;

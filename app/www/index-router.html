@@ -29,11 +29,12 @@
 		<script>
 			var AppRouter = Backbone.Router.extend({
 				routes: {
-					"/index-router.html": "homeCookin",
+					"": "homeCookin",
 					"menu": "menuOfHomeCookin",
 					"menu/:item": "homeCookinMenuItem"
 				},
 				homeCookin: function() {
+					console.log("in homeCookin");
 					if (this.currentView) {
 						this.currentView.remove();
 					}
@@ -42,6 +43,7 @@
 					$("#view-content").append(this.currentView.$el);
 				},
 				menuOfHomeCookin: function() {
+					console.log("in menuOfHomeCookin");
 					if (this.currentView) {
 						this.currentView.remove();
 					}
@@ -61,7 +63,7 @@
 			var appRouter = new AppRouter();
 			Backbone.history.start({ pushState: true });
 			$("#home-button").on("click", function() {
-				appRouter.navigate("/index-router.html", { trigger: true });
+				appRouter.navigate("/", { trigger: true });
 			});
 			$("#menu-button").on("click", function() {
 				appRouter.navigate("/menu", { trigger: true });

@@ -2,49 +2,49 @@
 
 <html dir="ltr">
 
-	<head>
-		<title>Intuit Boot Camp Backbone Views Demonstrations</title>
-		<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
-		<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
-		<link href='css/site.css' rel="stylesheet">
+<head>
+	<title>Intuit Boot Camp Backbone Views Demonstrations</title>
+	<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
+	<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
+	<link href='css/site.css' rel="stylesheet">
 
 
-	</head>
+</head>
 
-	<body>		
-		<h1>Backbone views demo</h1>
-		<script src="libs/jquery/dist/jquery.js"></script>
-		<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
-		<script src="libs/underscore/underscore.js"></script>
-		<script src="libs/backbone/backbone.js"></script>
-		<script src="libs/handlebars/handlebars.js"></script>
-		<script src="js/templates.js"></script>
+<body>		
+	<h1>Backbone views demo</h1>
+	<script src="libs/jquery/dist/jquery.js"></script>
+	<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
+	<script src="libs/underscore/underscore.js"></script>
+	<script src="libs/backbone/backbone.js"></script>
+	<script src="libs/handlebars/handlebars.js"></script>
+	<script src="js/templates.js"></script>
 
-		<article id="view-content"></article>
+	<article id="view-content"></article>
 
-		<script type="text/javascript">
+	<script type="text/javascript">
 
-			var BaseModel = Backbone.Model.extend({
+		var BaseModel = Backbone.Model.extend({
 				//sync: customSync,
 				idAttribute: "_id"
 			});
-			var BaseCollection = Backbone.Collection.extend({
+		var BaseCollection = Backbone.Collection.extend({
 				//sync: customSync
 			});
-			var Transaction = BaseModel.extend({
-					urlRoot: "/api/transaction",
-					defaults: {
-					accountNumber: null,
-					payee: null,
-					taxItem: "No Tax Item 2",
-					amount: null,
-					description: null
-				}
-			});
-			var Transactions = BaseCollection.extend({
-				model: Transaction,
-				url: "/api/transactions"
-			});
+		var Transaction = BaseModel.extend({
+			urlRoot: "/api/transaction",
+			defaults: {
+				accountNumber: null,
+				payee: null,
+				taxItem: "No Tax Item 2",
+				amount: null,
+				description: null
+			}
+		});
+		var Transactions = BaseCollection.extend({
+			model: Transaction,
+			url: "/api/transactions"
+		});
 
 
 			// var myView = new Backbone.View({
@@ -111,7 +111,8 @@
 			});
 
 			var ts = new Transactions();
-				ts.fetch({ success: function() {
+			
+			ts.fetch({ success: function() {
 				var tsView = new TransactionsView({
 					el: $("#view-content"),
 					collection: ts.toJSON()
@@ -125,4 +126,4 @@
 
 	</body>
 
-</html>
+	</html>

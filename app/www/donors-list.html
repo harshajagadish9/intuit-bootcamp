@@ -69,6 +69,29 @@
 		var donations = new Donations();
 
 
+		var DonationsView = Backbone.View.extend({
+			events: {
+				//"click tbody": "rowTransaction"
+			},
+			template: templates["donations"],
+			render: function() {
+				this.$el.html(this.template({
+					donations: this.collection
+				}));
+			},
+			initialize: function(options) {
+				this.options = options;
+			},
+			rowTransaction: function(e) {
+				if (e.target instanceof HTMLButtonElement) {
+					console.dir($(e.target).attr("data-model-id"));
+					console.log("handle transaction fired!");
+					console.dir($(e.target).closest("tr"));
+				}
+			}
+		});
+
+		
 		window.addEventListener("DOMContentLoaded", function() {
 			document.getElementById("log-me-in")
 			.addEventListener("click", function() {
@@ -90,13 +113,19 @@
 				console.log(donations.models);
 				donations.fetch({
 					success: function() {
+						var dsView = new DonationsView({
+							el: $("#view"),
+							collection: donations.toJSON()
+						});						
+						dsView.render();
+
 						//var source = document.getElementById("donation-records").innerHTML;
 						//var template = Handlebars.compile(source);
-						var template = window.templates.donations;
-						var html = template({
-							donations:  donations.toJSON()
-						});
-						document.getElementById("view").innerHTML = html;
+						// var template = window.templates.donations;
+						// var html = template({
+						// 	donations:  donations.toJSON()
+						// });
+						//document.getElementById("view").innerHTML = html;
 					}
 				})
 			});

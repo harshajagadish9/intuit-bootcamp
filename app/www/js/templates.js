@@ -46,6 +46,22 @@ this["templates"]["donations"] = Handlebars.template({"1":function(depth0,helper
     + "</table>";
 },"useData":true});
 
+this["templates"]["transaction-form"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
+    var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
+
+  return "<form><div><div><label for=\"account-number\">Account Number:</label><input type=\"text\" id=\"account-number\" name=\"account-number\" value=\""
+    + alias3(((helper = (helper = helpers.accountNumber || (depth0 != null ? depth0.accountNumber : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"accountNumber","hash":{},"data":data}) : helper)))
+    + "\"></div><div><label for=\"payee\">Payee:</label><input type=\"text\" id=\"payee\" name=\"payee\" value=\""
+    + alias3(((helper = (helper = helpers.payee || (depth0 != null ? depth0.payee : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"payee","hash":{},"data":data}) : helper)))
+    + "\"></div><div><label for=\"description\">Description:</label><input type=\"text\" id=\"description\" name=\"description\" value=\""
+    + alias3(((helper = (helper = helpers.description || (depth0 != null ? depth0.description : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"description","hash":{},"data":data}) : helper)))
+    + "\"></div><div><label for=\"tax-item\">Tax Item:</label><input type=\"text\" id=\"tax-item\" name=\"tax-item\" value=\""
+    + alias3(((helper = (helper = helpers.taxItem || (depth0 != null ? depth0.taxItem : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"taxItem","hash":{},"data":data}) : helper)))
+    + "\"></div><div><label for=\"amount\">Amount:</label><input type=\"text\" id=\"amount\" name=\"amount\" value=\""
+    + alias3(((helper = (helper = helpers.amount || (depth0 != null ? depth0.amount : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"amount","hash":{},"data":data}) : helper)))
+    + "\"></div><div><button type=\"button\" id=\"save-transaction\">Save Transaction</button> <button type=\"button\" id=\"cancel-transaction\">Cancel Transaction</button></div></div></form>";
+},"useData":true});
+
 this["templates"]["transaction"] = Handlebars.template({"compiler":[6,">= 2.0.0-beta.1"],"main":function(depth0,helpers,partials,data) {
     var helper, alias1=helpers.helperMissing, alias2="function", alias3=this.escapeExpression;
 
@@ -59,7 +75,7 @@ this["templates"]["transaction"] = Handlebars.template({"compiler":[6,">= 2.0.0-
     + alias3(((helper = (helper = helpers.taxItem || (depth0 != null ? depth0.taxItem : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"taxItem","hash":{},"data":data}) : helper)))
     + "</div><div><label>Amount:</label>"
     + alias3(((helper = (helper = helpers.amount || (depth0 != null ? depth0.amount : depth0)) != null ? helper : alias1),(typeof helper === alias2 ? helper.call(depth0,{"name":"amount","hash":{},"data":data}) : helper)))
-    + "</div></div>";
+    + "</div><button type=\"button\" id=\"save-transaction\">Save Transaction</button></div>";
 },"useData":true});
 
 this["templates"]["transactions"] = Handlebars.template({"1":function(depth0,helpers,partials,data) {

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+
+<html dir="ltr">
+
+	<head>
+		<title>Intuit Boot Camp Backbone Views Demonstrations</title>
+		<link href='libs/bootstrap/dist/css/bootstrap.min.css' rel="stylesheet">
+		<link href='libs/bootstrap/dist/css/bootstrap-theme.min.css' rel="stylesheet">
+		<link href='css/site.css' rel="stylesheet">
+
+
+	</head>
+
+	<body>		
+		<h1>Backbone views demo</h1>
+		<script src="libs/jquery/dist/jquery.js"></script>
+		<script src="libs/bootstrap/dist/js/bootstrap.js"></script>
+		<script src="libs/underscore/underscore.js"></script>
+		<script src="libs/backbone/backbone.js"></script>
+		<script src="libs/handlebars/handlebars.js"></script>
+		<script src="js/templates.js"></script>
+
+		<article id="view-content"></article>
+
+		<script type="text/javascript">
+
+			var BaseModel = Backbone.Model.extend({
+				//sync: customSync,
+				idAttribute: "_id"
+			});
+			var BaseCollection = Backbone.Collection.extend({
+				//sync: customSync
+			});
+			var Transaction = BaseModel.extend({
+					urlRoot: "/api/transaction",
+					defaults: {
+					accountNumber: null,
+					payee: null,
+					taxItem: "No Tax Item 2",
+					amount: null,
+					description: null
+				}
+			});
+			var Transactions = BaseCollection.extend({
+				model: Transaction,
+				url: "/api/transactions"
+			});
+
+
+			// var myView = new Backbone.View({
+			// 	tagName: "tabs",
+			// 	id: "my-tabs",
+			// 	className: "cool-tabs",
+			// 	attributes:{
+			// 		"aria-label" : "Hello World!"
+			// 	}
+			// });
+
+			// console.dir(myView);
+
+			var TransactionView = Backbone.View.extend({
+				events: {
+					"click button": "handleTransaction"
+				},
+				template: templates["transaction-form"],
+				render: function() {
+					this.$el.html(this.template(this.model));
+				},
+				initialize: function(options) {
+					this.options = options;
+				},
+				handleTransaction: function(e) {
+					console.log(e.target.id);
+					console.log("handle transaction fired!");
+				}
+			});
+
+			var tView = new TransactionView({
+				el: $("#view-content"),
+				model:{
+					accountNumber:1,
+					payee: " google",
+					description: " Adsense",
+					taxItem : " for advertising",
+					amount:  " 1000"
+				}				
+			});
+
+			//tView.render();
+
+			var TransactionsView = Backbone.View.extend({
+				events: {
+					"click tbody": "rowTransaction"
+				},
+				template: templates["transactions"],
+				render: function() {
+					this.$el.html(this.template({
+						transactions: this.collection
+					}));
+				},
+				initialize: function(options) {
+					this.options = options;
+				},
+				rowTransaction: function(e) {
+					if (e.target instanceof HTMLButtonElement) {
+						console.dir($(e.target).attr("data-model-id"));
+						console.log("handle transaction fired!");
+						console.dir($(e.target).closest("tr"));
+					}
+				}
+			});
+
+			var ts = new Transactions();
+				ts.fetch({ success: function() {
+				var tsView = new TransactionsView({
+					el: $("#view-content"),
+					collection: ts.toJSON()
+				});
+				console.dir(tsView);
+				tsView.render();
+			}});
+
+		</script>
+
+
+	</body>
+
+</html>
